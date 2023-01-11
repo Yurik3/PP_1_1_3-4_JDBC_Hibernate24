@@ -22,7 +22,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        try (Session session = factory.getCurrentSession()) {
+        try (Session session = factory.openSession()) {
             session.beginTransaction();
             session.createNativeQuery("CREATE TABLE  IF NOT EXISTS user " +
                             " ( Id BIGINT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255), lastName VARCHAR(255), age INT)")
@@ -37,7 +37,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void dropUsersTable() {
-        try (Session session = factory.getCurrentSession()) {
+        try (Session session = factory.openSession()) {
             session.beginTransaction();
             session.createNativeQuery("DROP TABLE  IF  EXISTS user ")
                     .executeUpdate();
@@ -48,7 +48,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        try (Session session = factory.getCurrentSession()) {
+        try (Session session = factory.openSession()) {
             session.beginTransaction();
             session.save(new User(name, lastName, age));
             session.getTransaction().commit();
@@ -60,7 +60,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void removeUserById(long id) {
-        try (Session session = factory.getCurrentSession()) {
+        try (Session session = factory.openSession()) {
             session.beginTransaction();
             session.delete(session.get(User.class, id));
             session.getTransaction().commit();
@@ -73,7 +73,7 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        try (Session session = factory.getCurrentSession()) {
+        try (Session session = factory.openSession()) {
             session.beginTransaction();
             users = session.createQuery("from User").getResultList();
             for (User e : users)
@@ -87,7 +87,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        try (Session session = factory.getCurrentSession()) {
+        try (Session session = factory.openSession()) {
             session.beginTransaction();
             session.createNativeQuery("TRUNCATE TABLE user")
                     .executeUpdate();
